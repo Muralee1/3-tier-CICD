@@ -35,6 +35,51 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+
+      - name: Delete Existing IAM Instance Profile
+        run: |
+          PROFILE_NAME="EC2_lambda_instance_profile"
+          PROFILE_ARN=$(aws iam get-instance-profile --instance-profile-name $PROFILE_NAME --query 'InstanceProfile.Arn' --output text)
+          if [ -n "$PROFILE_ARN" ]; then
+            aws iam delete-instance-profile --instance-profile-name $PROFILE_NAME
+          else
+            echo "Instance Profile $PROFILE_NAME does not exist."
+          fi
+
+      - name: Delete Existing ALB Target Group
+        run: |
+          TG_NAME="webapp-tg"
+          TG_ARN=$(aws elbv2 describe-target-groups --names $TG_NAME --query 'TargetGroups[0].TargetGroupArn' --output text)
+          if [ -n "$TG_ARN" ]; then
+            aws elbv2 delete-target-group --target-group-arn $TG_ARN
+          else
+            echo "Target Group $TG_NAME does not exist."
+          fi
+
+      - name: Delete Existing CodeDeploy Application
+        run: |
+          APP_NAME="webapp"
+          APP_ARN=$(aws deploy get-application --application-name $APP_NAME --query 'application.applicationId' --output text)
+          if [ -n "$APP_ARN" ]; then
+            aws deploy delete-application --application-name $APP_NAME
+          else
+            echo "CodeDeploy Application $APP_NAME does not exist."
+          fi
+
+      - name: Delete Existing EC2 Key Pair
+        run: |
+          KEY_NAME="webapp_keypair"
+          KEY_PAIR=$(aws ec2 describe-key-pairs --key-names $KEY_NAME --query 'KeyPairs[0].KeyName' --output text)
+          if [ -n "$KEY_PAIR" ]; then
+            aws ec2 delete-key-pair --key-name $KEY_NAME
+          else
+            echo "Key Pair $KEY_NAME does not exist."
+          fi
+         
       - name: Terraform Init
         working-directory: Terraform  # Navigate to the Terraform folder
         run: terraform init
