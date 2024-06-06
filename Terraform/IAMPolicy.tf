@@ -1,5 +1,5 @@
 resource "aws_iam_policy" "policy_for_lambda" {
-  name        = "write_DynamoDB_lambda"
+  name        = "write_DynamoDB_lambda-2"
   description = "Access to write to DynamoDB Table"
 
   # Terraform's "jsonencode" function converts a
@@ -44,7 +44,7 @@ resource "aws_iam_policy" "policy_for_lambda" {
 }
 
 resource "aws_iam_role" "lambda_role" {
-  name = "lambda-DynamoDB-write-role"
+  name = "lambda-DynamoDB-write-role-2"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -92,7 +92,7 @@ resource "aws_iam_policy" "policy_for_EC2" {
 }
 
 resource "aws_iam_role" "ec2_role" {
-  name = "ec2-lambda-invoke-role"
+  name = "ec2-lambda-invoke-role-2"
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -118,7 +118,7 @@ resource "aws_iam_instance_profile" "EC2_lambda_instance_profile" {
 }
 
 resource "aws_iam_policy" "Policy_for_codeDeploy" {
-  name        = "Policy_for_codeDeploy_EC2"
+  name        = "Policy_for_codeDeploy_EC2-2"
   description = "Access to do CD on EC2 using codeDeploy"
 
   # Terraform's "jsonencode" function converts a
@@ -209,7 +209,7 @@ resource "aws_iam_policy" "Policy_for_codeDeploy" {
 }
 
 resource "aws_iam_role" "codedeploy_role" {
-  name = "Policy_for_codeDeploy_EC2-role"
+  name = "Policy_for_codeDeploy_EC2-role-2"
 
   assume_role_policy = jsonencode({
     Version   = "2012-10-17"
