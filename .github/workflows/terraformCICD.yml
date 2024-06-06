@@ -40,15 +40,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y awscli
 
-      - name: Delete Existing IAM Instance Profile
-        run: |
-          PROFILE_NAME="EC2_lambda_instance_profile"
-          PROFILE_ARN=$(aws iam get-instance-profile --instance-profile-name $PROFILE_NAME --query 'InstanceProfile.Arn' --output text)
-          if [ -n "$PROFILE_ARN" ]; then
-            aws iam delete-instance-profile --instance-profile-name $PROFILE_NAME
-          else
-            echo "Instance Profile $PROFILE_NAME does not exist."
-          fi
+     # - name: Delete Existing IAM Instance Profile
+      #  run: |
+       #   PROFILE_NAME="EC2_lambda_instance_profile"
+        #  PROFILE_ARN=$(aws iam get-instance-profile --instance-profile-name $PROFILE_NAME --query 'InstanceProfile.Arn' --output text)
+         # if [ -n "$PROFILE_ARN" ]; then
+          #  aws iam delete-instance-profile --instance-profile-name $PROFILE_NAME
+          #else
+           # echo "Instance Profile $PROFILE_NAME does not exist."
+          #fi
 
       - name: Delete Existing ALB Target Group
         run: |
