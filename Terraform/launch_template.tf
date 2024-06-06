@@ -16,7 +16,7 @@ resource "aws_key_pair" "webapp_keypair" {
   public_key = tls_private_key.key_for_webapp_keypair.public_key_openssh
 }
 
-resource "aws_launch_template" "webapp-template-2" {
+resource "aws_launch_template" "webapp-template" {
   name            = "webapp-template-2"
   default_version = 1
   description     = "Launch template for webapp"
