@@ -27,17 +27,18 @@ jobs:
       - name: Initialize Terraform
         run: terraform init "-backend-config=bucket=***" "-backend-config=region=***" "-backend-config=dynamodb_table=***" "-backend-config=encrypt=true"
 
-
       - name: Terraform Destroy
         run: terraform destroy -auto-approve
 
       - name: Clean Up
         if: always()
         run: |
-          terraform state rm \*
+          resources=$(terraform state list)
+          for resource in $resources; do
+            terraform state rm $resource
+          done
           rm -rf .terraform
           rm -f .terraform.lock.hcl
 
       - name: Set output
         run: echo "my_output_name=some_value" >> $GITHUB_ENV
-#2
