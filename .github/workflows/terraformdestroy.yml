@@ -34,7 +34,7 @@ jobs:
       - name: Clean Up
         if: always()
         run: |
-          terraform state rm '*'
+          terraform state rm \*
           rm -rf .terraform
           rm -f .terraform.lock.hcl
 
