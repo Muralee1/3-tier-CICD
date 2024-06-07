@@ -40,3 +40,6 @@ jobs:
           terraform state rm '*'
           rm -rf .terraform
           rm -f .terraform.lock.hcl
+
+      - name: Set output
+        run: echo "my_output_name=some_value" >> $GITHUB_ENV
