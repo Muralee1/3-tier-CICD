@@ -40,3 +40,4 @@ jobs:
 
       - name: Set output
         run: echo "my_output_name=some_value" >> $GITHUB_ENV
+#2
