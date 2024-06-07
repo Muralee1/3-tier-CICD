@@ -25,11 +25,8 @@ jobs:
           aws-region: ${{ secrets.TF_VAR_s3_bucket_region }}
 
       - name: Initialize Terraform
-        run: terraform init \
-          -backend-config="bucket=${{ secrets.TF_VAR_s3_bucket }}" \
-          -backend-config="region=${{ secrets.TF_VAR_s3_bucket_region }}" \
-          -backend-config="dynamodb_table=${{ secrets.TF_VAR_dynamodb_table }}" \
-          -backend-config="encrypt=true"
+        run: terraform init "-backend-config=bucket=***" "-backend-config=region=***" "-backend-config=dynamodb_table=***" "-backend-config=encrypt=true"
+
 
       - name: Terraform Destroy
         run: terraform destroy -auto-approve
