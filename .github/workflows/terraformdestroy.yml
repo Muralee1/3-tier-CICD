@@ -1,44 +1,37 @@
 name: Terraform Destroy
 
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+  workflow_dispatch: # Allows manual triggering from the GitHub Actions tab
 
 jobs:
-  destroy:
+  terraform-destroy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.0.11 # Specify your Terraform version
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.TF_VAR_s3_bucket_region }}
+          aws-region: us-west-2 # Specify your AWS region
 
       - name: Initialize Terraform
-        run: terraform init "-backend-config=bucket=***" "-backend-config=region=***" "-backend-config=dynamodb_table=***" "-backend-config=encrypt=true"
+        run: terraform init
 
-      - name: Terraform Destroy
-        run: terraform destroy -auto-approve
+      - name: Validate Terraform
+        run: terraform validate
 
-      - name: Clean Up
-        if: always()
-        run: |
-          resources=$(terraform state list)
-          for resource in $resources; do
-            terraform state rm $resource
-          done
-          rm -rf .terraform
-          rm -f .terraform.lock.hcl
+      - name: Plan Terraform Destroy
+        run: terraform plan -destroy -out=destroy.tfplan
 
-      - name: Set output
-        run: echo "my_output_name=some_value" >> $GITHUB_ENV
+      - name: Apply Terraform Destroy
+        run: terraform apply -auto-approve destroy.tfplan
+
